@@ -22,28 +22,20 @@ shinyUI(fluidPage(
                 tags$hr()
             ),
 
-            conditionalPanel(
-                condition="input.tabs == 'Map'",
                 selectInput("category", "Select Category",
                             choices = list("Cases",
                                            "Confirmed cases",
                                            "Deaths",
                                            "New cases",
                                            "Probable cases",
-                                           "Suspected cases"))),
+                                           "Suspected cases")),
 
-#             conditionalPanel(
-#                 condition="input.tabs == 'Plot'",
-#                 selectInput("moph", "Select MOPH Region", multiple = FALSE,
-#                             choices = c(list("Thailand" = "all",
-#                                              "Bangkok" = 0), seq(1,12))
-#                 )),
-#
-#             conditionalPanel(
-#                 condition="input.tabs == 'Plot'",
-#                 selectInput("start", "Select Start Year", choices = seq(2014, 2000, -1), selected = 2013)
-#             ),
-#
+            conditionalPanel(
+                condition="input.tabs == 'Plot'",
+                selectInput("city", "Select City", multiple = TRUE,
+                            choices = names(table(guinea_dat$sdr_name[which(guinea_dat$sdr_name > 0)])))
+                ),
+
             tags$hr(),
 
             ## author line
@@ -95,90 +87,64 @@ shinyUI(fluidPage(
                              )
                          )), id="Map"),
                 ## plot tab with google chart options
-#                 tabPanel("Time Series",
-#                          ## make chart title here (otherwise not centered)
-#                          h4(uiOutput("plot_title"), align="center"),
-#                          ## make line chart
-#                          googleComboChart("plot", width="100%", height="475px", options = list(
-#
-#                              ## set fonts
-#                              fontName = "Source Sans Pro",
-#                              fontSize = 14,
-#
-#                              ## set axis titles, ticks, fonts, and ranges
-#                              hAxis = list(
-#                                  #title = "",
-#                                  #format = "####-##-##",
-#                                  #                ticks = seq(1999, 2011, 2),
-#                                  #                viewWindow = xlim,
-#                                  textStyle = list(
-#                                      fontSize = 14),
-#                                  titleTextStyle = list(
-#                                      fontSize = 16,
-#                                      bold = TRUE,
-#                                      italic = FALSE)
-#                              ),
-#                              vAxis = list(
-#                                  title = "Number of cases per biweek",
-#                                  textStyle = list(
-#                                      fontSize = 14),
-#                                  titleTextStyle = list(
-#                                      fontSize = 16,
-#                                      bold = TRUE,
-#                                      italic = FALSE)
-#                              ),
-#
-#                              seriesType = "bars",
-#                              series = list(
-#                                  "1" = list(
-#                                      type = "line"),
-#                                  #                "2" = list(
-#                                  #                 type = "line"),
-#                                  "2" = list(
-#                                      type = "area"),
-#                                  "3" = list(
-#                                      type = "area", lineWidth=0, pointSize=0, areaOpacity=1, visibleInLegend=FALSE),
-#                                  "4" = list(
-#                                      type = "line", visibleInLegend=FALSE)
-#                              ),
-#                              isStacked = FALSE,
-#
-#                              ## set legend fonts
-#                              legend = list(
-#                                  textStyle = list(
-#                                      fontSize=14)),
-#
-#                              ## set chart area padding
-#                              chartArea = list(
-#                                  top = 50, left = 75,
-#                                  height = "75%", width = "65%"
-#                              ),
-#
-#                              #               # Allow pan/zoom
-#                              #               explorer = list(),
-#                              #               # Set bubble visual props
-#                              #               bubble = list(
-#                              #                opacity = 0.4, stroke = "none",
-#                              #                # Hide bubble label
-#                              #                textStyle = list(
-#                              #                 color = "none"
-#                              #                )
-#                              #               ),
-#
-#                              ## set colors
-#                              colors = c(cbbPalette[1], #"gray",
-#                                         cbbPalette[2:3], "white", cbbPalette[3]),
-#
-#                              ## set point size
-#                              pointSize = 3,
-#
-#                              # set tooltip font size
-#                              tooltip = list(
-#                                  textStyle = list(
-#                                      fontSize = 14)
-#                              )
-#                          )),
-#                          value="Plot"),
+                tabPanel("Time Series",
+                         ## make chart title here (otherwise not centered)
+                         h4(uiOutput("plot_title"), align="center"),
+                         ## make line chart
+                         googleLineChart("plot", width="100%", height="475px", options = list(
+
+                             ## set fonts
+                             fontName = "Source Sans Pro",
+                             fontSize = 14,
+
+                             ## set axis titles, ticks, fonts, and ranges
+                             hAxis = list(
+                                 #title = "",
+                                 #format = "####-##-##",
+                                 #                ticks = seq(1999, 2011, 2),
+                                 #                viewWindow = xlim,
+                                 textStyle = list(
+                                     fontSize = 14),
+                                 titleTextStyle = list(
+                                     fontSize = 16,
+                                     bold = TRUE,
+                                     italic = FALSE)
+                             ),
+                             vAxis = list(
+                                 title = "Number of cases per biweek",
+                                 textStyle = list(
+                                     fontSize = 14),
+                                 titleTextStyle = list(
+                                     fontSize = 16,
+                                     bold = TRUE,
+                                     italic = FALSE)
+                             ),
+
+                             ## set legend fonts
+                             legend = list(
+                                 textStyle = list(
+                                     fontSize=14)),
+
+                             ## set chart area padding
+                             chartArea = list(
+                                 top = 50, left = 75,
+                                 height = "75%", width = "65%"
+                             ),
+
+                             
+                             ## set colors
+                             colors = cbbPalette,
+
+                             ## set point size
+                             pointSize = 3,
+
+                             # set tooltip font size
+                             tooltip = list(
+                                 textStyle = list(
+                                     fontSize = 14)
+                             )
+                         )),
+                         value="Plot"),
                 id="tabs")
         )
     )

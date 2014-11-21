@@ -2,6 +2,11 @@ require(dplyr)
 require(googleCharts)
 require(shiny)
 require(lubridate)
+require(tidyr)
+
+## Set graph colors (special for colorblind people)
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", 
+                "#0072B2", "#D55E00", "#CC79A7")
 
 ebola_dat <- read.delim("sub-national-time-series-data.csv")
 ebola_dat$date <- as.Date(ebola_dat$date, origin = "1900-01-01")

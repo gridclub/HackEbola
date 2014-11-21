@@ -1,9 +1,10 @@
 shinyServer(function(input, output, session) {
   
   ## suidf is a reactive dataframe. Necessary for when summary/plot/map have common input (Multiple Variables). Not in this project
-  suidf <- reactive({
-    suidf <- suidata
-    suidf    
+  guinea_df <- reactive({
+    guinea_df <- guinea_dat %>%
+      filter(category == input$category)
+    guinea_df
   })
   
 #   ## Create summary table
@@ -64,58 +65,46 @@ shinyServer(function(input, output, session) {
 #   
 #   
   
-#   ## create the plot of the data
-#   output$plot <- reactive({
-#     moph <- input$moph
-#     
-#     if(moph == "all")
-#       moph <- seq(0, 12)
-#     
-#     ## format counts into plot format 
-#     plot_counts <- merge(counts, thai_prov_data, by="province", all.x=T) %>%
-#       filter(disease == 26, date_sick_year >= input$start, MOPH_Admin_Code %in% moph) %>%
-#       group_by(date_sick_biweek, date_sick_year) %>%
-#       summarise(count = round(sum(count)))
-#     
-#     ## add date variable
-#     plot_counts$date <- biweek_to_date(plot_counts$date_sick_biweek, 
-#                                        plot_counts$date_sick_year)
-#     
-#     plot_forecasts <- merge(forecasts, thai_prov_data, by.x="pid", by.y="FIPS", all.x=T) %>%
-#       filter(MOPH_Admin_Code %in% moph) %>%
-#       group_by(biweek, year) %>%
-#       summarise(predicted_count = round(sum(predicted_count)),
-#                 ub = round(sum(ub)),
-#                 lb = round(sum(lb)))
-#     plot_forecasts$unseen <- plot_forecasts$lb
-#     
-#     plot_forecasts$date <- biweek_to_date(plot_forecasts$biweek, plot_forecasts$year)
-#     
-#     plot_df <- merge(plot_counts, plot_forecasts, by = "date", all=T)[,c("date", "count", "predicted_count", "ub", "lb", "unseen")]
-#     
-#     plot_df$date <- as.Date(plot_df$date)
-#     
-#     #   plot_df$unused <- ifelse(is.na(plot_df$predicted_count), NA, plot_df$count)
-#     
-#     plot_df$count <- ifelse(is.na(plot_df$predicted_count), plot_df$count, NA)
-#     
-#     plot_df <- select(plot_df, date, count, #unused, 
-#                       predicted_count, ub, unseen, lb)
-#     
-#     colnames(plot_df) <- c("Date", "Observed Cases",# "Incomplete Recent Cases",
-#                            "Forecasted Cases", "Prediction interval", "Unseen", 
-#                            "CI Lower Bound")
-#     
-#     ## this outputs the google data to be used in the UI to create the dataframe
-#     list(
-#       data=googleDataTable(plot_df),
-#       options = list(
-#         vAxis = list(
-#           viewWindow = list(max = max(plot_counts$count, plot_forecasts$predicted_count)*1.1)
-#         )
-#       ))
-#   })
-#   
+  ## create the plot of the data
+  output$plot <- reactive({
+    guinea_df <- guinea_df()
+    if(is.null(input$city)){
+      plot_df <- ebola_dat %>%
+        filter(country == "Guinea", localite == "National", category == input$category) %>%
+        group_by(month) %>%
+        summarise(value = sum(value))
+      
+      plot_df$month <- months(as.Date(paste0("2014-", plot_df$month, "-01")))
+      
+      colnames(plot_df) <- c("Month", input$category)
+      
+      return(list(
+        data=googleDataTable(plot_df),
+        options = list(
+          vAxis = list(
+            title = paste("Number of", input$category, "in Guinea each month")
+          )
+        )))
+    }
+        
+    cities_df <- guinea_df %>%
+      filter(sdr_name %in% input$city)
+    
+    plot_df <- spread(cities_df, sdr_name, value)[,-1]
+    
+    plot_df$month <- months(as.Date(paste0("2014-", plot_df$month, "-01")))
+    colnames(plot_df)[1] <- c("Month")
+    
+    ## this outputs the google data to be used in the UI to create the dataframe
+    list(
+      data=googleDataTable(plot_df),
+      options = list(
+        vAxis = list(
+          title = paste("Number of", input$category, "each month")
+        )
+      ))
+  })
+  
   
   observe({
         ## only run when 'back' is clicked
@@ -160,8 +149,9 @@ shinyServer(function(input, output, session) {
     })
 
     output$map <- reactive({
-        map_df <- guinea_dat %>%
-                filter(category == input$category, month == input$date) %>%
+      guinea_df <- guinea_df()
+        map_df <- guinea_df %>%
+                filter(month == input$date) %>%
                 group_by(sdr_name) %>%
                 summarise(Count = sum(value, na.rm=T))
 
@@ -170,7 +160,7 @@ shinyServer(function(input, output, session) {
             list(data=googleDataTable(map_df),
                  options = list(
                      colorAxis = list(
-                         maxValue = max(guinea_dat$value[which(guinea_dat$category == input$category)], na.rm=T),
+                         maxValue = max(guinea_df$value[which(guinea_df$category == input$category)], na.rm=T),
                          colors = c("green", "yellow", "red"))
                  ))
     })
