@@ -17,8 +17,7 @@ shinyUI(fluidPage(
 #                                         "July" = 7,
                                         "August" = 8,
                                         "September" = 9,
-                                        "October" = 10,
-                                        "November" = 11)),
+                                        "October" = 10)),
                 actionButton("back", "Previous"), actionButton("forward", "Next"),
                 tags$hr()
             ),

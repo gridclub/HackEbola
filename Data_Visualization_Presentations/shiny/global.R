@@ -3,7 +3,7 @@ require(googleCharts)
 require(shiny)
 require(lubridate)
 
-ebola_dat <- read.delim("~/Google Drive/slauer_git/HackEbola/HackEbola/sub-national-time-series-data.csv")
+ebola_dat <- read.delim("sub-national-time-series-data.csv")
 ebola_dat$date <- as.Date(ebola_dat$date, origin = "1900-01-01")
 ebola_dat$month <- month(ebola_dat$date)
 
