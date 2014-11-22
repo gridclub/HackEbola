@@ -39,7 +39,7 @@ map_dat <- ebola_dat %>%
 
 #####################################MAP CREATION##############
 
-cuts <- quantile(map_dat$value, probs = seq(0.2, 0.8, 0.2))
+cuts <- quantile(map_dat$value, probs = seq(0, 1, length.out = length(map_colors)))
 
 ## assign colors to each entry in the data frame
 color <- as.integer(cut2(map_dat$value, cuts = cuts))
