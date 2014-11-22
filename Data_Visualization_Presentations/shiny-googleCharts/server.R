@@ -88,9 +88,10 @@ shinyServer(function(input, output, session) {
     }
         
     cities_df <- guinea_df %>%
-      filter(sdr_name %in% input$city)
+      filter(sdr_name %in% input$city) %>%
+      data.frame()
     
-    plot_df <- spread(cities_df, sdr_name, value)[,-1]
+    plot_df <- spread(data=cities_df, key=sdr_name, value=value)[,-1]
     
     plot_df$month <- months(as.Date(paste0("2014-", plot_df$month, "-01")))
     colnames(plot_df)[1] <- c("Month")
