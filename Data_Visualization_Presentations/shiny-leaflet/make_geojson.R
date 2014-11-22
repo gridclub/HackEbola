@@ -7,10 +7,10 @@ library(sp)
 ##download and unzip a shapefile from the US Census
 # note that this file is somewhat big so it might take a couple
 # of minutes to download
-downloaddir <- "SLE_adm/"
+downloaddir <- "LBR_adm/"
 
 #bring the shapefile into R for a little formatting. 
-filename <- "SLE_adm2.shp"
+filename <- "LBR_adm1.shp"
 filename <- gsub(".shp", "", filename)
 
 # ----- Read in shapefile (NAD83 coordinate system)
@@ -65,3 +65,4 @@ writeOGR(obj=transdat, dsn=leafdat, layer="", driver="GeoJSON")
 # 
 # # ----- to look at the map you can use this code
 # browseURL(map)
+
