@@ -2,19 +2,15 @@
 shinyServer(function(input, output, session) {
   values <- reactiveValues(selectedFeature=NULL, highlight=c())
   
-  #############################################
-  
   ## draw leaflet map
   map <- createLeafletMap(session, "map")
   
-  ## the functions within observe are called when any of the inputs are called
-  
-  ## Does nothing until called (done with action button)
+  ## Does nothing until the session is loaded
   session$onFlushed(once=TRUE, function() {
-#       browser()
-      map$addGeoJSON(SLE_adm2) # draw map
+    map$addGeoJSON(SLE_adm2) # draw map
   })
   
+  ## Grab properties from clicked province
   observe({
     ## EVT = Mouse Click
     evt <- input$map_click
@@ -38,26 +34,26 @@ shinyServer(function(input, output, session) {
   ##  This function is what creates info box
   output$details <- renderText({
     
-    ## Before a county is clicked, display a message
+    ## Before a district is clicked, display a message
     if(is.null(values$selectedFeature)){
       return(as.character(tags$div(
         tags$div(
-          h4("Click on a town or city"))
+          h4("Click on a district"))
       )))
     }
     #     browser()
-    town_name <- values$selectedFeature$NAME_2
-    town_value <- prettyNum(values$selectedFeature["Cases"], big.mark = ",")
+    district_name <- values$selectedFeature$NAME_2
+    district_value <- prettyNum(values$selectedFeature["Cases"], big.mark = ",")
     
-    ## If clicked county has no crude rate, display a message
-    if(town_value == "NULL"){
+    ## If clicked district has no crude rate, display a message
+    if(district_value == "NULL"){
       return(as.character(tags$div(
-        tags$h5("The number of cases in ", town_name))))
+        tags$h5("The number of cases in ", district_name))))
     }
     ## For a single year when county is clicked, display a message
     as.character(tags$div(
-      tags$h4("The number of cases in ", town_name),
-      tags$h5(town_value)
+      tags$h4("The number of cases in ", district_name),
+      tags$h5(district_value)
     ))
   })
   

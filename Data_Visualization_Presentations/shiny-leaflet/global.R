@@ -1,14 +1,8 @@
 require(dplyr)
-require(sp)
-require(maptools)
-require(rgeos)
-require(Hmisc)
 require(shiny)
 require(leaflet)
 require(RJSONIO)
-require(rCharts)
 require(tidyr)
-require(lubridate)
 
 SLE_adm2 <- fromJSON("SLE_adm/SLE_adm2.geojson")
 
@@ -66,7 +60,7 @@ for(i in 1:length(SLE_adm2$features)){
     ## "#000000" = Black, "#999999"=Grey, 
     weight=ifelse(map_dat$restricted[map_prop_index] == 1, 2, 1), stroke=TRUE, 
     color=ifelse(map_dat$restricted[map_prop_index] == 1, "#000000", "white"), 
-    opacity=ifelse(map_dat$restricted[map_prop_index] == 1, 1, 0.5)
+    opacity=ifelse(map_dat$restricted[map_prop_index] == 1, 1, 0)
   )
 }
 
