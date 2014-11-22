@@ -6,6 +6,7 @@ pkgTest <- function(x)
     if(!require(x,character.only = TRUE)) stop("Package not found")
   }
 }
+pkgTest("devtools")
 if(!require("dplyr")) install_github('hadley/dplyr')
 pkgTest("shiny")
 install_github('leaflet-shiny', 'jcheng5')
