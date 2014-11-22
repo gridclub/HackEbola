@@ -1,8 +1,17 @@
-require(dplyr)
-require(shiny)
-require(leaflet)
-require(RJSONIO)
-require(tidyr)
+pkgTest <- function(x)
+{
+  if (!require(x,character.only = TRUE))
+  {
+    install.packages(x,dep=TRUE)
+    if(!require(x,character.only = TRUE)) stop("Package not found")
+  }
+}
+if(!require("dplyr")) install_github('hadley/dplyr')
+pkgTest("shiny")
+install_github('leaflet-shiny', 'jcheng5')
+if(!require("leaflet")) install_github('jcheng5/leaflet-shiny')
+pkgTest(RJSONIO)
+pkgTest(tidyr)
 
 SLE_adm2 <- fromJSON("SLE_adm/SLE_adm2.geojson")
 
