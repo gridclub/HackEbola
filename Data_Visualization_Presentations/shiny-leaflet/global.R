@@ -10,8 +10,9 @@ if(!require("dplyr")) install_github('hadley/dplyr')
 pkgTest("shiny")
 install_github('leaflet-shiny', 'jcheng5')
 if(!require("leaflet")) install_github('jcheng5/leaflet-shiny')
-pkgTest(RJSONIO)
-pkgTest(tidyr)
+pkgTest("RJSONIO")
+pkgTest("tidyr")
+pkgTest("Hmisc")
 
 SLE_adm2 <- fromJSON("SLE_adm/SLE_adm2.geojson")
 
