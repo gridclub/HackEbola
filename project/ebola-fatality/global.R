@@ -17,6 +17,8 @@ pkgTest("tidyr")
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", 
                 "#0072B2", "#D55E00", "#CC79A7")
 
-ebola_dat <- read.csv("ebola-donations-final.csv")
 
-ebola_dat$Date <- as.Date(ymd(ebola_dat$Date))
+
+ebola_dat <- read.csv("ebola-fatality-final.csv")
+
+ebola_dat$Date <- as.Date(ebola_dat$Date, origin = "1900-01-01")
