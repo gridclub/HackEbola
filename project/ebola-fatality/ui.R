@@ -9,7 +9,7 @@ shinyUI(fluidPage(
             ## in map, allow for timespan selection
             conditionalPanel(
                 condition="input.tabs == 'Map'",
-                sliderInput("date", "Select Date", min = 16314, max = 16394, value = 16314,
+                sliderInput("date", "Select Date", min = 16315, max = 16394, value = 16315,
                             animate=animationOptions(interval=1000, loop=F, playButton = NULL,
                                                      pauseButton = NULL)),
 #                 actionButton("back", "Previous"), actionButton("forward", "Next"),
@@ -34,7 +34,7 @@ shinyUI(fluidPage(
 
             ## author line
             h6("Created by:"),
-            h6("Moira Concannon")
+            h6("Moira Concannon & Stephen Lauer")
 
         ),
 
