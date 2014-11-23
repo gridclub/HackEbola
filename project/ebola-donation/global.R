@@ -17,17 +17,20 @@ pkgTest("tidyr")
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", 
                 "#0072B2", "#D55E00", "#CC79A7")
 
-## Load data and group cases by month
-ebola_dat <- read.delim("sub-national-time-series-data.csv")
-ebola_dat$date <- as.Date(ebola_dat$date, origin = "1900-01-01")
-ebola_dat$month <- month(ebola_dat$date)
+cases_interp <- read.csv("~/Google Drive/HackEbola/project/ebola-donation/cases_interp.csv")[,-1]
+cleaned_donations <- read.csv("~/Google Drive/HackEbola/project/ebola-donation/cleaned_donations.csv")[,-1]
 
-guinea_dat <- ebola_dat %>%
-    filter(sdr_name != "") %>%
-    group_by(category, month, sdr_name) %>%
-    summarise(value = sum(value))
+cases_interp$Date <- ymd(cases_interp$Date)
+cleaned_donations$Date <- ymd(cleaned_donations$Date)
+cases_interp$country <- as.character(cases_interp$country)
+cleaned_donations$destination <- as.character(cleaned_donations$destination)
 
-## make sure that classes of columns are correct
-guinea_dat$category <- as.character(guinea_dat$category)
-guinea_dat$sdr_name <- as.character(guinea_dat$sdr_name)
-guinea_dat$value <- as.numeric(guinea_dat$value)
+ebola_dat <- merge(x=cases_interp, y=cleaned_donations, 
+                   by.x = c("Date", "country"), by.y = c("Date", "destination"),
+                   all.x = TRUE, all.y=FALSE)
+
+ebola_dat$USD.given <- ifelse(is.na(ebola_dat$USD.given), 0, ebola_dat$USD.given)
+
+ebola_dat2  <- ebola_dat %>% 
+  group_by(country) %>%
+  mutate(USD_interp = cumsum(USD.given))

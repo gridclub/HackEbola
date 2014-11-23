@@ -1,69 +1,11 @@
 shinyServer(function(input, output, session) {
   
   ## suidf is a reactive dataframe. Necessary for when summary/plot/map have common input (Multiple Variables). Not in this project
-  guinea_df <- reactive({
-    guinea_df <- guinea_dat %>%
-      filter(category == input$category)
-    guinea_df
+  ebola_df <- reactive({
+    ebola_df <- ebola_dat %>%
+      filter(Date == input$date)
+    ebola_df
   })
-  
-#   ## Create summary table
-#   output$summary <- renderDataTable({
-#     ## Make reactive dataframe into regular dataframe
-#     suidf <- suidf()
-#     
-#     ## if a user chooses Single Year, display only data from that year (dpylr)
-#     if(input$timespan == "sing.yr"){
-#       df <- filter(suidf, Year==input$year)
-#     }
-#     
-#     ## if a user chooses Multiple Years, display data from all years in range
-#     if(input$timespan == "mult.yrs"){
-#       range <- seq(min(input$range), max(input$range), 1)
-#       df <- c()
-#       for(i in 1:length(range)){
-#         bbb <- subset(suidf, Year==range[i])
-#         df <- rbind.data.frame(df, bbb)
-#       }
-#     }
-#     
-#     ## make counties a vector based on input variable
-#     if(!is.null(input$county))
-#       counties <- input$county
-#     ## if none selected, put all counties in vector
-#     if(is.null(input$county))
-#       counties <- names(table(suidata[,1]))[c(1:7, 9:12,14)]
-#     
-#     ## if the user checks the meanUS box or the meanMA box, add those to counties vector
-#     if(input$meanUS){
-#       if(input$meanMA){
-#         counties <- c("US", "MA", counties) ## US and MA  
-#       } else{
-#         counties <- c("US", counties) ## US only
-#       }
-#     } else{
-#       if(input$meanMA){
-#         counties <- c("MA", counties) ## US only ## MA only
-#       }
-#     }
-#     
-#     ## create a dataframe consisting only of counties in vector
-#     df2 <- c()
-#     for(i in 1:length(counties)){
-#       bbb <- subset(df, County==counties[i])
-#       df2 <- rbind.data.frame(df2, bbb)
-#     }
-#     
-#     ## make column names more pretty (i.e. no periods)
-#     colnames(df2)[7:10] <- c("Crude Rate (per 100,000)", 
-#                              "Crude Rate Lower Bound", 
-#                              "Crude Rate Upper Bound", 
-#                              "Crude Rate Standard Error")
-#     
-#     return(df2)
-#   }, options=list(searching = FALSE, orderClasses = TRUE)) # there are a bunch of options to edit the appearance of datatables, these make them pretty
-#   
-#   
   
   ## create the plot of the data
   output$plot <- reactive({
@@ -72,7 +14,7 @@ shinyServer(function(input, output, session) {
       plot_df <- ebola_dat %>%
         filter(country == "Guinea", localite == "National", category == input$category) %>%
         group_by(month) %>%
-        summarise(value = sum(value))
+        summarise(value = max(value))
       
       plot_df$month <- months(as.Date(paste0("2014-", plot_df$month, "-01")))
       

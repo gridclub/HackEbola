@@ -2,45 +2,38 @@ shinyUI(fluidPage(
     ## this starts the googleCharts engine
     googleChartsInit(),
     ## create title
-    titlePanel("Ebola cases in Guinea"),
+    titlePanel("Donations and Ebola cases in West Africa"),
     ## create sidebar
     sidebarLayout(
         sidebarPanel(
             ## in map, allow for timespan selection
             conditionalPanel(
                 condition="input.tabs == 'Map'",
-                selectInput("date", "Select Month",
-                            choices = c("March" = 3,
-                                        "April" = 4,
-                                        "May" = 5,
-                                        "June" = 6,
-#                                         "July" = 7,
-                                        "August" = 8,
-                                        "September" = 9,
-                                        "October" = 10)),
-                actionButton("back", "Previous"), actionButton("forward", "Next"),
+                sliderInput("date", "Select Date",
+                            choices = unique(ebola_dat$Date)),
+#                 actionButton("back", "Previous"), actionButton("forward", "Next"),
                 tags$hr()
             ),
 
-                selectInput("category", "Select Category",
-                            choices = list("Cases",
-                                           "Confirmed cases",
-                                           "Deaths",
-                                           "New cases",
-                                           "Probable cases",
-                                           "Suspected cases")),
+#                 selectInput("category", "Select Category",
+#                             choices = list("Cases",
+#                                            "Confirmed cases",
+#                                            "Deaths",
+#                                            "New cases",
+#                                            "Probable cases",
+#                                            "Suspected cases")),
 
-            conditionalPanel(
-                condition="input.tabs == 'Plot'",
-                selectInput("city", "Select City", multiple = TRUE,
-                            choices = names(table(guinea_dat$sdr_name[which(guinea_dat$sdr_name > 0)])))
-                ),
+#             conditionalPanel(
+#                 condition="input.tabs == 'Plot'",
+#                 selectInput("city", "Select City", multiple = TRUE,
+#                             choices = names(table(guinea_dat$sdr_name[which(guinea_dat$sdr_name > 0)])))
+#                 ),
 
             tags$hr(),
 
             ## author line
             h6("Created by:"),
-            h6("Stephen A Lauer")
+            h6("Mark Hagemann & Stephen A Lauer")
 
         ),
 
