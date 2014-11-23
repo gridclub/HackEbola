@@ -9,8 +9,9 @@ shinyUI(fluidPage(
             ## in map, allow for timespan selection
             conditionalPanel(
                 condition="input.tabs == 'Map'",
-                sliderInput("date", "Select Date",
-                            choices = unique(ebola_dat$Date)),
+                sliderInput("date", "Select Date", min = 16222, max = 16394, value = 16222,
+                            animate=animationOptions(interval=1000, loop=F, playButton = NULL,
+                                                     pauseButton = NULL)),
 #                 actionButton("back", "Previous"), actionButton("forward", "Next"),
                 tags$hr()
             ),
@@ -80,64 +81,64 @@ shinyUI(fluidPage(
                              )
                          )), id="Map"),
                 ## plot tab with google chart options
-                tabPanel("Time Series",
-                         ## make chart title here (otherwise not centered)
-                         h4(uiOutput("plot_title"), align="center"),
-                         ## make line chart
-                         googleLineChart("plot", width="100%", height="475px", options = list(
-
-                             ## set fonts
-                             fontName = "Source Sans Pro",
-                             fontSize = 14,
-
-                             ## set axis titles, ticks, fonts, and ranges
-                             hAxis = list(
-                                 #title = "",
-                                 #format = "####-##-##",
-                                 #                ticks = seq(1999, 2011, 2),
-                                 #                viewWindow = xlim,
-                                 textStyle = list(
-                                     fontSize = 14),
-                                 titleTextStyle = list(
-                                     fontSize = 16,
-                                     bold = TRUE,
-                                     italic = FALSE)
-                             ),
-                             vAxis = list(
-                                 title = "Number of cases per biweek",
-                                 textStyle = list(
-                                     fontSize = 14),
-                                 titleTextStyle = list(
-                                     fontSize = 16,
-                                     bold = TRUE,
-                                     italic = FALSE)
-                             ),
-
-                             ## set legend fonts
-                             legend = list(
-                                 textStyle = list(
-                                     fontSize=14)),
-
-                             ## set chart area padding
-                             chartArea = list(
-                                 top = 50, left = 75,
-                                 height = "75%", width = "65%"
-                             ),
-
-                             
-                             ## set colors
-                             colors = cbbPalette,
-
-                             ## set point size
-                             pointSize = 3,
-
-                             # set tooltip font size
-                             tooltip = list(
-                                 textStyle = list(
-                                     fontSize = 14)
-                             )
-                         )),
-                         value="Plot"),
+#                 tabPanel("Time Series",
+#                          ## make chart title here (otherwise not centered)
+#                          h4(uiOutput("plot_title"), align="center"),
+#                          ## make line chart
+#                          googleLineChart("plot", width="100%", height="475px", options = list(
+# 
+#                              ## set fonts
+#                              fontName = "Source Sans Pro",
+#                              fontSize = 14,
+# 
+#                              ## set axis titles, ticks, fonts, and ranges
+#                              hAxis = list(
+#                                  #title = "",
+#                                  #format = "####-##-##",
+#                                  #                ticks = seq(1999, 2011, 2),
+#                                  #                viewWindow = xlim,
+#                                  textStyle = list(
+#                                      fontSize = 14),
+#                                  titleTextStyle = list(
+#                                      fontSize = 16,
+#                                      bold = TRUE,
+#                                      italic = FALSE)
+#                              ),
+#                              vAxis = list(
+#                                  title = "Number of cases per biweek",
+#                                  textStyle = list(
+#                                      fontSize = 14),
+#                                  titleTextStyle = list(
+#                                      fontSize = 16,
+#                                      bold = TRUE,
+#                                      italic = FALSE)
+#                              ),
+# 
+#                              ## set legend fonts
+#                              legend = list(
+#                                  textStyle = list(
+#                                      fontSize=14)),
+# 
+#                              ## set chart area padding
+#                              chartArea = list(
+#                                  top = 50, left = 75,
+#                                  height = "75%", width = "65%"
+#                              ),
+# 
+#                              
+#                              ## set colors
+#                              colors = cbbPalette,
+# 
+#                              ## set point size
+#                              pointSize = 3,
+# 
+#                              # set tooltip font size
+#                              tooltip = list(
+#                                  textStyle = list(
+#                                      fontSize = 14)
+#                              )
+#                          )),
+#                          value="Plot"),
                 id="tabs")
         )
     )

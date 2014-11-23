@@ -25,12 +25,25 @@ cleaned_donations$Date <- ymd(cleaned_donations$Date)
 cases_interp$country <- as.character(cases_interp$country)
 cleaned_donations$destination <- as.character(cleaned_donations$destination)
 
-ebola_dat <- merge(x=cases_interp, y=cleaned_donations, 
-                   by.x = c("Date", "country"), by.y = c("Date", "destination"),
-                   all.x = TRUE, all.y=FALSE)
+cleaner_donations <- cleaned_donations %>%
+  group_by(Date, destination) %>%
+  summarise(USD_given = sum(USD.given))
 
-ebola_dat$USD.given <- ifelse(is.na(ebola_dat$USD.given), 0, ebola_dat$USD.given)
+dates <- seq.Date(from = as.Date("2014-01-01"), to = as.Date("2014-11-20"), by = 1)
+donations_interp <- data.frame(Date = rep(dates, each = 3),
+                               country = rep(c("Guinea", "Sierra Leone", "Liberia"), 
+                                             length(dates)))
+donations_interp2 <- merge(x = donations_interp, y = cleaner_donations, 
+                           by.x = c("Date", "country"), by.y = c("Date", "destination"), 
+                           all.x = TRUE)  
 
-ebola_dat2  <- ebola_dat %>% 
+donations_interp2$USD_given <- ifelse(is.na(donations_interp2$USD_given), 0, 
+                                      donations_interp2$USD_given)
+
+donations_interp3 <- donations_interp2 %>%
   group_by(country) %>%
-  mutate(USD_interp = cumsum(USD.given))
+  mutate(USD_interp = cumsum(USD_given))
+
+ebola_dat <- merge(x=cases_interp, y=donations_interp3, all=TRUE)
+
+ebola_dat$Date <- as.Date(ebola_dat$Date)
