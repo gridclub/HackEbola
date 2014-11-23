@@ -7,7 +7,7 @@ shinyServer(function(input, output, session) {
   
   ## Does nothing until the session is loaded
   session$onFlushed(once=TRUE, function() {
-    map$addGeoJSON(SLE_adm2) # draw map
+    map$addGeoJSON(west_africa_adm2) # draw map
   })
   
   ## Grab properties from clicked province
@@ -33,7 +33,6 @@ shinyServer(function(input, output, session) {
   })
   ##  This function is what creates info box
   output$details <- renderText({
-    
     ## Before a district is clicked, display a message
     if(is.null(values$selectedFeature)){
       return(as.character(tags$div(
@@ -41,8 +40,9 @@ shinyServer(function(input, output, session) {
           h4("Click on a district"))
       )))
     }
+    detail_index <- ifelse(values$selectedFeature$ISO == "LBR", "NAME_1", "NAME_2")
     #     browser()
-    district_name <- values$selectedFeature$NAME_2
+    district_name <- values$selectedFeature[detail_index]
     district_value <- prettyNum(values$selectedFeature["Cases"], big.mark = ",")
     
     ## If clicked district has no crude rate, display a message

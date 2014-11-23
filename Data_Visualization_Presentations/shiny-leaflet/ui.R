@@ -2,7 +2,8 @@
 shinyUI(fluidPage(
   
   ## title
-  titlePanel("Sierra Leone Ebola cases and travel restrictions"),
+  titlePanel("West Africa Ebola cases and travel restrictions"),
+  
   ## Add a little CSS to make the map background pure white
   tags$head(tags$style("
 #showcase-code-position-toggle, #showcase-sxs-code { display: none; }
@@ -10,7 +11,7 @@ shinyUI(fluidPage(
                        ")),
   ## Map Creation
   leafletMap("map", width=1200, height=800, 
-             options=list(center = c(8, -11), zoom=8)), 
+             options=list(center = c(8, -11), zoom=6)), 
   
   ## Info Box 
   absolutePanel(left=50, bottom=50, width=300, class="floater",
