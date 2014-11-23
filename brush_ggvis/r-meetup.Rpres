@@ -1,0 +1,249 @@
+ggvis
+========================================================
+author: From R-Meetup adapted from Winston Cheng 
+incremental: true
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+require(knitr)
+opts_chunk$set(warning=FALSE,message=FALSE, fig.align = 'center')
+```
+
+
+New packages
+========================================================
+
+- **Data Manipulation**: dplyr
+- **Visualization**: ggvis, rCharts
+- **Reproducibility**: packrat
+- **Style**: RLint, formatR
+
+
+Your turn
+========================================================
+type: prompt
+
+Install/load ggvis and familiarize yourselves with the
+motor trend cars data set.
+
+```{r helpmtcars, eval=FALSE}
+require(ggvis)
+?mtcars
+head(mtcars)
+str(mtcars)
+```
+
+Using whatever paradigm you like (base R, ggplot2, lattice), build a scatterplot
+of `mpg` as a function of `wt`.
+
+
+Base R
+========================================================
+
+```{r basere, eval=2}
+plot(mtcars$wt, mtcars$mpg)
+plot(mpg ~ wt, data = mtcars)
+```
+
+
+lattice
+========================================================
+```{r lattice}
+require(lattice)
+xyplot(mpg ~ wt, data = mtcars)
+```
+
+
+ggplot2
+========================================================
+
+```{r ggplot2, fig.align='center'}
+require(ggplot2)
+ggplot(mtcars) + geom_point(aes(x = wt, y = mpg))
+```
+
+
+ggvis
+========================================================
+```{r}
+require(ggvis)
+mtcars %>%
+  ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points()
+```
+
+
+What is ggvis?
+========================================================
+type: section
+
+
+What is ggvis?
+========================================================
+
+A tool to build interactive graphics for exploratory data analysis.
+
+- Grammar of graphics (ggplot2)
+- Grammar of data transformation (dplyr)
+- Interactivity (Shiny)
+- Web-based graphics (Vega.js)
+
+
+Static graphics
+========================================================
+type: section
+
+
+ggvis syntax
+========================================================
+New
+
+```{r eval=FALSE}
+require(ggvis)
+mtcars %>%
+  ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points()
+```
+
+Old
+```{r eval=FALSE}
+layer_points(ggvis(mtcars, x = ~wt, y = ~mpg))
+```
+
+
+ggvis syntax
+========================================================
+- Use `%>%` to pass one object along the pipeline to the next function.
+- `~` indicates you want a dynamic map to that variable in a dataframe.
+- `:=` sets that visual property to a fixed, unscaled value.
+
+
+ggvis + dplyr
+========================================================
+Seamless integration:
+
+```{r eval = FALSE}
+require(dplyr)
+mtcars %>%
+  ggvis(x = ~mpg, y = ~disp) %>%
+  # convert engine displacment to litres
+  mutate(disp = disp / 61.0237) %>%
+  layer_points()
+```
+
+
+More visual options
+========================================================
+- `fill`
+- `stroke`
+- `size`
+- `shape`
+
+```{r, eval = FALSE}
+mtcars %>%
+  ggvis(~mpg, ~disp, fill = ~vs) %>%
+  layer_points()
+```
+
+
+Mapping vs setting
+========================================================
+
+```{r, eval = FALSE}
+mtcars %>% 
+  ggvis(~wt, ~mpg, fill := "red", stroke := "black") %>% 
+  layer_points()
+```
+
+
+Your turn
+========================================================
+type: prompt
+
+Build a static graphic that is a scatterplot with displacement on the x,
+horsepower on the y, and signify the different number of cylinders with
+a third visual mapping.  Fix the color scheme so that the plotting characters
+are in "tomato".
+
+
+Interactive graphics
+========================================================
+type: section
+
+
+Goal: pick good settings
+========================================================
+
+```{r eval=FALSE}
+mtcars %>% 
+  ggvis(~wt, ~mpg, 
+    size := input_slider(10, 100),
+    opacity := input_slider(0, 1)
+  ) %>% 
+  layer_points()
+```
+
+
+Goal: avoid arbitrary parameter choice
+========================================================
+
+```{r eval=FALSE}
+mtcars %>% 
+  ggvis(~wt) %>% 
+  layer_histograms(binwidth = input_slider(0, 2, step = 0.1))
+```
+
+
+What's going on?
+========================================================
+
+- Plots are built by `Shiny`.
+- The plot reacts to your input and redraws.
+- Other inputs: `input_checkbox()`, `input_checkboxgroup`, `input_numeric`, `input_radiobuttons()`, `input_select()`, `input_text()`.
+
+**Challenges**
+- Requires an R session.
+- Redrawing can be slow.
+
+
+A rich example
+========================================================
+```{r}
+mtcars %>% ggvis(x = ~wt) %>%
+    layer_densities(
+      adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
+      kernel = input_select(
+        c("Gaussian" = "gaussian",
+          "Epanechnikov" = "epanechnikov",
+          "Rectangular" = "rectangular",
+          "Triangular" = "triangular",
+          "Biweight" = "biweight",
+          "Cosine" = "cosine",
+          "Optcosine" = "optcosine"),
+        label = "Kernel")
+    )
+```
+
+
+
+========================================================
+type: section
+
+
+ggvis vs ggplot2
+========================================================
+- `ggplot()`
+- `aes()`
+- `+`
+- supports faceting
+- operates on dataframes
+- output as pdf, jpg, png
+
+***
+
+- `ggvis()`
+- `props()`
+- `%>%`
+- no faceting
+- flexible application
+- SVG output only
+
