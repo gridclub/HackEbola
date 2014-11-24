@@ -9,8 +9,8 @@ shinyUI(fluidPage(
             ## in map, allow for timespan selection
             conditionalPanel(
                 condition="input.tabs == 'Map'",
-                sliderInput("date", "Select Date", min = 16222, max = 16394, value = 16222,
-                            animate=animationOptions(interval=1000, loop=F, playButton = NULL,
+                sliderInput("date", "Days since May 1", min = 16151, max = 16394, value = 16151,
+                            animate=animationOptions(interval=100, loop=F, playButton = NULL,
                                                      pauseButton = NULL)),
 #                 actionButton("back", "Previous"), actionButton("forward", "Next"),
                 tags$hr()

@@ -98,13 +98,14 @@ shinyServer(function(input, output, session) {
     
     map_df <- ebola_df[,c("location", "USD_interp", "val.approx")]
     
-    colnames(map_df) <- c("City", "USD Donated", "Cases")
+    colnames(map_df) <- c("City", "USD Donated (log10)", "Cases")
+    map_df[,2] = log10(map_df[,2] + 1)
     
     list(data=googleDataTable(map_df),
          options = list(
            colorAxis = list(
 #              values = "USD Donations",
-             maxValue = max(ebola_dat$USD_interp, na.rm=T),
+             maxValue = log10(max(ebola_dat$USD_interp, na.rm=T)),
              colors = c("red", "yellow", "green")),
            sizeAxis = list(
 #              values = "Cases",
