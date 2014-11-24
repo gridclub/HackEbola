@@ -22,9 +22,9 @@ shinyUI(fluidPage(
                      checkboxInput("log", "Plot y-axis on log scale")
                      ),
 
-        mainPanel(p("USD donated and number of ebola cases"),
-
+        mainPanel(p("USD donated and number of ebola cases. Modified from Caitlin River's app which can be found at https://github.com/cmrivers/ebola"),
+                  
                   plotOutput("plot")
-                  )
         )
+    )
 ))
