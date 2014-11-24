@@ -8,7 +8,7 @@ pkgTest <- function(x)
 }
 pkgTest("devtools")
 if(!require("dplyr")) install_github('hadley/dplyr')
-if(!require("googleCharts")) install_github('jcheng5/googleCharts')
+if(!require("googleCharts")) {install_github('jcheng5/googleCharts'); library(googleCharts)}
 pkgTest("shiny")
 pkgTest("lubridate")
 pkgTest("tidyr")
