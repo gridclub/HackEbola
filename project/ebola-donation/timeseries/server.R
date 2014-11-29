@@ -51,7 +51,6 @@ ebola_data = read.csv("data/ebola-donations-final.csv") %>%
 
 shinyServer(function(input, output) {
   data_plot <- reactive({
-#     browser()
     cases = cases
     dons = dons
     countries = input$countries
